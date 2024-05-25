@@ -12,3 +12,4 @@ c:\Users\JairusSW\Code\CSharp\CSC.101\obj\Debug\net8.0-windows\refint\CSC.101.dl
 c:\Users\JairusSW\Code\CSharp\CSC.101\obj\Debug\net8.0-windows\CSC.101.pdb
 c:\Users\JairusSW\Code\CSharp\CSC.101\obj\Debug\net8.0-windows\CSC.101.genruntimeconfig.cache
 c:\Users\JairusSW\Code\CSharp\CSC.101\obj\Debug\net8.0-windows\ref\CSC.101.dll
+c:\Users\JairusSW\Code\CSharp\CSC.101\obj\Debug\net8.0-windows\CSC.101.sourcelink.json

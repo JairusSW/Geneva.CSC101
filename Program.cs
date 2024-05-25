@@ -9,6 +9,7 @@ namespace LabelEx
         public string name { get; set; }
         public double price { get; set; }
         public Image image { get; set; }
+        public int stock { get; set; } = 6;
 
         public Item(string _name, double _price, Image _image)
         {
@@ -27,10 +28,15 @@ namespace LabelEx
 
             image = result;
         }
+
+        public void restock()
+        {
+            stock = 6;
+        }
     }
     public class Entry : Form
     {
-        public List<Item> items;
+        public List<Item> inventory;
         public List<Item> cart = new List<Item>();
         public double cartPrice = 0.00;
         public Entry()
@@ -63,7 +69,7 @@ namespace LabelEx
             };
             Controls.Add(picBox);
 
-            items = [
+            inventory = [
                 new Item("Coca Cola", 2.99, Image.FromFile(coca_cola_path)),
                 new Item("Redbull", 3.99, Image.FromFile(red_bull_path)),
                 new Item("Dr. Pepper", 1.99, Image.FromFile(dr_pepper_path)),
@@ -80,9 +86,9 @@ namespace LabelEx
 
             ToolTip tooltip = new ToolTip();
 
-            for (int i = 0; i < items.Count; i++)
+            for (int i = 0; i < inventory.Count; i++)
             {
-                var item = items[i];
+                var item = inventory[i];
                 var buyButton = new Button
                 {
                     //Text = item.name,
@@ -120,10 +126,43 @@ namespace LabelEx
 
         private void buyClick(Item item)
         {
+            if (--item.stock <= 0)
+            {
+                Console.WriteLine("Out of stock!");
+                // Pop a notification bubble thing up maybe?
+                foreach (Control control in Controls)
+                {
+                    if (control is Button button && button.Image == item.image)
+                    {
+                        button.Enabled = false;
+                        break;
+                    }
+                }
+                return;
+            }
             Console.WriteLine($"Clicked {item.name} with price ${item.price}", "Item Clicked");
             cart.Add(item);
             cartPrice += item.price;
             Console.WriteLine($"Cart Price: ${cartPrice}");
+        }
+
+        private void checkOut()
+        {
+            double tax = 0.01;
+            double withTax = cartPrice * (1 + tax);
+
+            Console.WriteLine($"Buying {cart.Count} items for ${cartPrice}");
+        }
+
+        private void reset()
+        {
+            cart = new List<Item>();
+            cartPrice = 0.00;
+
+            for (int i = 0; i < inventory.Count; i++)
+            {
+                inventory.ElementAt(i).restock();
+            }
         }
 
         [STAThread]
