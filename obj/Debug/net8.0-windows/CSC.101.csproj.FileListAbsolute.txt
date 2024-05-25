@@ -1,0 +1,14 @@
+c:\Users\JairusSW\Code\CSharp\CSC.101\bin\Debug\net8.0-windows\CSC.101.exe
+c:\Users\JairusSW\Code\CSharp\CSC.101\bin\Debug\net8.0-windows\CSC.101.deps.json
+c:\Users\JairusSW\Code\CSharp\CSC.101\bin\Debug\net8.0-windows\CSC.101.runtimeconfig.json
+c:\Users\JairusSW\Code\CSharp\CSC.101\bin\Debug\net8.0-windows\CSC.101.dll
+c:\Users\JairusSW\Code\CSharp\CSC.101\bin\Debug\net8.0-windows\CSC.101.pdb
+c:\Users\JairusSW\Code\CSharp\CSC.101\obj\Debug\net8.0-windows\CSC.101.GeneratedMSBuildEditorConfig.editorconfig
+c:\Users\JairusSW\Code\CSharp\CSC.101\obj\Debug\net8.0-windows\CSC.101.AssemblyInfoInputs.cache
+c:\Users\JairusSW\Code\CSharp\CSC.101\obj\Debug\net8.0-windows\CSC.101.AssemblyInfo.cs
+c:\Users\JairusSW\Code\CSharp\CSC.101\obj\Debug\net8.0-windows\CSC.101.csproj.CoreCompileInputs.cache
+c:\Users\JairusSW\Code\CSharp\CSC.101\obj\Debug\net8.0-windows\CSC.101.dll
+c:\Users\JairusSW\Code\CSharp\CSC.101\obj\Debug\net8.0-windows\refint\CSC.101.dll
+c:\Users\JairusSW\Code\CSharp\CSC.101\obj\Debug\net8.0-windows\CSC.101.pdb
+c:\Users\JairusSW\Code\CSharp\CSC.101\obj\Debug\net8.0-windows\CSC.101.genruntimeconfig.cache
+c:\Users\JairusSW\Code\CSharp\CSC.101\obj\Debug\net8.0-windows\ref\CSC.101.dll
