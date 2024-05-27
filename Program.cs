@@ -1,15 +1,88 @@
+/*
+I used https://zetcode.com/csharp/windowsforms/ and the docs as main resources for this.
+Sorry about that bad code quality here. I last used C# when I was 12.
+*/
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
 
 namespace LabelEx
 {
+    public class ReceiptPopup : Form
+    {
+        public ReceiptPopup(List<Item> cart, decimal subtotal, decimal tax, decimal total)
+        {
+            Text = "Receipt";
+            Size = new Size(200, 300);
+            StartPosition = FormStartPosition.CenterScreen;
+            AutoScroll = true;
+
+            Label titleLabel = new Label
+            {
+                Text = "Receipt:\n-------------------",
+                AutoSize = true,
+                Location = new Point(10, 30)
+            };
+            Controls.Add(titleLabel);
+
+            int offset = 70;
+            for (int i = 0; i < cart.Count; i++)
+            {
+                Item item = cart.ElementAt(i);
+                Label itemLabel = new Label
+                {
+                    Text = $" {item.name} - ${item.price}",
+                    AutoSize = true,
+                    Location = new Point(10, offset)
+                };
+                Controls.Add(itemLabel);
+                offset += 20;
+            }
+
+            Label subtotalLabel = new Label
+            {
+                Text = $"-------------------\nSubtotal: ${subtotal}",
+                AutoSize = true,
+                Location = new Point(10, offset)
+            };
+            Controls.Add(subtotalLabel);
+
+            Label taxLabel = new Label
+            {
+                Text = $"Tax: ${tax}",
+                AutoSize = true,
+                Location = new Point(10, offset + 40)
+            };
+            Controls.Add(taxLabel);
+
+            Label totalLabel = new Label
+            {
+                Text = $"Total: ${total}",
+                AutoSize = true,
+                Location = new Point(10, offset + 60)
+            };
+            Controls.Add(totalLabel);
+
+            Button okButton = new Button
+            {
+                Text = "OK",
+                DialogResult = DialogResult.OK,
+                Location = new Point(100, offset + 80),
+                Size = new Size(75, 25)
+            };
+
+            okButton.Click += (_, _) => Close();
+
+            Controls.Add(okButton);
+        }
+    }
     public class Item
     {
         public string name { get; set; }
         public decimal price { get; set; }
         public Image image { get; set; }
         public int stock { get; set; } = 6;
+        public Button btn { get; set; } = new Button();
 
         public Item(string _name, decimal _price, Image _image)
         {
@@ -19,12 +92,9 @@ namespace LabelEx
             // Found this on stackoverflow
             Bitmap result = new Bitmap(71, 71);
 
-            using (Graphics graphics = Graphics.FromImage(result))
-            {
-                graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
-                graphics.DrawImage(_image, 0, 0, 71, 71);
-            }
-
+            Graphics graphics = Graphics.FromImage(result);
+            graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
+            graphics.DrawImage(_image, 0, 0, 71, 71);
 
             image = result;
         }
@@ -52,8 +122,26 @@ namespace LabelEx
         private Label subtotalLabel;
         private Label taxLabel;
         private Label totalLabel;
+
+        private ToolTip tooltip = new ToolTip();
+
         public Entry()
         {
+            StartPosition = FormStartPosition.CenterScreen;
+            ClientSize = new Size(800, 450);
+
+            Button quit = new Button
+            {
+                Height = 30,
+                Width = 30,
+                Text = "✕",
+                AutoSize = false
+            };
+            quit.Click += (_, _) => Close();
+
+            Controls.Add(quit);
+
+            CenterToScreen();
 
             ClientSize = new Size(630, 550);
             BackColor = Color.FromArgb(227, 30, 14);
@@ -85,25 +173,23 @@ namespace LabelEx
 
             inventory = [
                 new Item("Coca Cola", 2.99m, Image.FromFile(coca_cola_path)),
-                new Item("Redbull", 3.99m, Image.FromFile(red_bull_path)),
-                new Item("Dr. Pepper", 1.99m, Image.FromFile(dr_pepper_path)),
-                new Item("Orange Fanta", 2.99m, Image.FromFile(orange_fanta_path)),
-                new Item("Peace Tea", 0.99m, Image.FromFile(peace_tea_path)),
-                new Item("Arizona Tea", 0.99m, Image.FromFile(arizona_tea_path)),
-                new Item("Mountain Dew", 2.99m, Image.FromFile(mtn_dew_path)),
-                new Item("MUG Root Beer", 2.99m, Image.FromFile(mug_root_beer_path)),
-                new Item("Brisk Iced Tea", 1.99m, Image.FromFile(brisk_tea_path))
+                    new Item("Redbull", 3.99m, Image.FromFile(red_bull_path)),
+                    new Item("Dr. Pepper", 1.99m, Image.FromFile(dr_pepper_path)),
+                    new Item("Orange Fanta", 2.99m, Image.FromFile(orange_fanta_path)),
+                    new Item("Peace Tea", 0.99m, Image.FromFile(peace_tea_path)),
+                    new Item("Arizona Tea", 0.99m, Image.FromFile(arizona_tea_path)),
+                    new Item("Mountain Dew", 2.99m, Image.FromFile(mtn_dew_path)),
+                    new Item("MUG Root Beer", 2.99m, Image.FromFile(mug_root_beer_path)),
+                    new Item("Brisk Iced Tea", 1.99m, Image.FromFile(brisk_tea_path))
             ];
 
             int buttonWidth = 71;
             int buttonHeight = 71;
 
-            ToolTip tooltip = new ToolTip();
-
             for (int i = 0; i < inventory.Count; i++)
             {
                 var item = inventory[i];
-                var buyButton = new Button
+                item.btn = new Button
                 {
                     //Text = item.name,
                     Size = new Size(buttonWidth, buttonHeight),
@@ -116,25 +202,13 @@ namespace LabelEx
 
                 // should pull out a padding variable. this is messy.
                 // perhaps make a box and center it on that
-                buyButton.Location = new Point(88 + col * (buttonWidth + 5), 125 + row * (buttonHeight + 5));
-                buyButton.Click += (_, _) => buyClick(item);
+                item.btn.Location = new Point(88 + col * (buttonWidth + 5), 125 + row * (buttonHeight + 5));
+                item.btn.Click += (_, _) => buyClick(item);
 
-                tooltip.SetToolTip(buyButton, $"{item.name} ${item.price}");
-                Controls.Add(buyButton);
+                tooltip.SetToolTip(item.btn, $"{item.name} ${item.price} ({item.stock} left)");
+                Controls.Add(item.btn);
 
             }
-
-            /*  Button openButton = new Button
-              {
-                  Text = "OPEN",
-                  ForeColor = Color.White,
-                  BackColor = Color.Black,
-                  TextAlign = ContentAlignment.MiddleCenter,
-                  Size = new Size(200, 60),
-                  Location = new Point((ClientSize.Width - 200) / 2, 350 + 20),
-                  Anchor = AnchorStyles.Left,
-              };
-              Controls.Add(openButton);*/
 
             cartPanel = new Panel
             {
@@ -160,7 +234,7 @@ namespace LabelEx
                 Location = new Point(350, 400),
                 Size = new Size(230, 20),
                 ForeColor = Color.White,
-                Text = "Tax (1%): $0.00"
+                Text = $"Tax ({taxPercent * 100}%): $0.00"
             };
             Controls.Add(taxLabel);
 
@@ -173,54 +247,123 @@ namespace LabelEx
             };
             Controls.Add(totalLabel);
 
+            Button checkoutButton = new Button
+            {
+                Text = "Checkout",
+                Location = new Point(350, 460),
+                Size = new Size(100, 30)
+            };
+            checkoutButton.Click += (_, _) => checkOut();
+            Controls.Add(checkoutButton);
+
+            Button cancelButton = new Button
+            {
+                Text = "Cancel",
+                Location = new Point(480, 460),
+                Size = new Size(100, 30)
+            };
+            cancelButton.Click += (_, _) => cancelOrder();
+            Controls.Add(cancelButton);
+
+            Button restockButton = new Button
+            {
+                Text = "Restock",
+                Location = new Point(210, 500),
+                Size = new Size(100, 30)
+            };
+            restockButton.Click += (_, _) => restock();
+            Controls.Add(restockButton);
+
+            Button resetButton = new Button
+            {
+                Text = "Reset",
+                Location = new Point(320, 500),
+                Size = new Size(100, 30)
+            };
+            resetButton.Click += (_, _) => reset();
+            Controls.Add(resetButton);
         }
 
+        private void cancelOrder()
+        {
+            for (int i = 0; i < cart.Count; i++)
+            {
+                // agh, horribly inefficient
+                Item item = cart.ElementAt(i);
+                item.stock++;
+                item.btn.Enabled = true;
+                tooltip.SetToolTip(item.btn, $"{item.name} ${item.price} ({item.stock} left)");
+            }
+
+            cart = new List<Item>();
+            cartPrice = 0.00m;
+            cartItemInfo.Text = "";
+            subtotalLabel.Text = "Subtotal: $0.00";
+            taxLabel.Text = $"Tax ({taxPercent * 100}%): $0.00";
+            totalLabel.Text = $"Total: $0.00";
+        }
         private void buyClick(Item item)
         {
-            if (--item.stock <= 0)
+            if (item.stock <= 0) return;
+            if (item.stock == 1)
             {
                 Console.WriteLine("Out of stock!");
-                foreach (Control control in Controls)
+                for (int i = 0; i < Controls.Count; i++)
                 {
-                    if (control is Button button && button.Image == item.image)
+                    if (Controls[i] is Button button && button.Image == item.image)
                     {
                         button.Enabled = false;
+                        tooltip.SetToolTip(item.btn, "Out of stock!");
                         break;
                     }
                 }
-                return;
             }
-            Console.WriteLine($"Clicked {item.name} with price ${item.price}", "Item Clicked");
+            item.stock--;
             cart.Add(item);
             cartPrice += item.price;
-            Console.WriteLine($"Cart Price: ${cartPrice}");
-
             cartItemInfo.Text += $"{item.name} - ${item.price}\n";
 
             subtotalLabel.Text = $"Subtotal: ${cartPrice}";
             // does it have like a .toFixed method or something
-            decimal totalPrice = Math.Round(cartPrice * (1 + taxPercent) * 100) / 100; ;
-            taxLabel.Text = $"Tax (${taxPercent}%): ${totalPrice - cartPrice}";
+            decimal totalPrice = Math.Round(cartPrice * (1 + taxPercent) * 100) / 100;
+            taxLabel.Text = $"Tax ({taxPercent * 100}%): ${totalPrice - cartPrice}";
             totalLabel.Text = $"Total: ${totalPrice}";
+            tooltip.SetToolTip(item.btn, $"{item.name} ${item.price} ({item.stock} left)");
         }
 
         private void checkOut()
         {
-            decimal tax = 0.01m;
-            decimal withTax = cartPrice * (1 + tax);
-
+            cartItemInfo.Text = "";
+            subtotalLabel.Text = "Subtotal: $0.00";
+            taxLabel.Text = $"Tax ({taxPercent * 100}%): $0.00";
             Console.WriteLine($"Buying {cart.Count} items for ${cartPrice}");
+            totalLabel.Text = $"Total: $0.00";
+            decimal totalPrice = Math.Round(cartPrice * (1 + taxPercent) * 100) / 100;
+            new ReceiptPopup(cart, cartPrice, totalPrice - cartPrice, totalPrice).Show();
+
+            cart = new List<Item>();
+            cartPrice = 0.00m;
         }
 
+        private void restock()
+        {
+            for (int i = 0; i < inventory.Count; i++)
+            {
+                Item item = inventory.ElementAt(i);
+                item.restock();
+                item.btn.Enabled = true;
+                tooltip.SetToolTip(item.btn, $"{item.name} ${item.price} ({item.stock} left)");
+            }
+        }
         private void reset()
         {
             cart = new List<Item>();
             cartPrice = 0.00m;
-
-            for (int i = 0; i < inventory.Count; i++)
-            {
-                inventory.ElementAt(i).restock();
-            }
+            restock();
+            cartItemInfo.Text = "";
+            subtotalLabel.Text = $"Subtotal: $0.00";
+            taxLabel.Text = $"Tax ({taxPercent * 100}%): $0.00";
+            totalLabel.Text = $"Total: $0.00";
         }
 
         [STAThread]
