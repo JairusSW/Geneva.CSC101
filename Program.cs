@@ -75,6 +75,11 @@ namespace LabelEx
 
             Controls.Add(okButton);
         }
+
+        private void InitializeComponent()
+        {
+
+        }
     }
     public class Item
     {
@@ -173,14 +178,14 @@ namespace LabelEx
 
             inventory = [
                 new Item("Coca Cola", 2.99m, Image.FromFile(coca_cola_path)),
-                    new Item("Redbull", 3.99m, Image.FromFile(red_bull_path)),
-                    new Item("Dr. Pepper", 1.99m, Image.FromFile(dr_pepper_path)),
-                    new Item("Orange Fanta", 2.99m, Image.FromFile(orange_fanta_path)),
-                    new Item("Peace Tea", 0.99m, Image.FromFile(peace_tea_path)),
-                    new Item("Arizona Tea", 0.99m, Image.FromFile(arizona_tea_path)),
-                    new Item("Mountain Dew", 2.99m, Image.FromFile(mtn_dew_path)),
-                    new Item("MUG Root Beer", 2.99m, Image.FromFile(mug_root_beer_path)),
-                    new Item("Brisk Iced Tea", 1.99m, Image.FromFile(brisk_tea_path))
+                new Item("Redbull", 3.99m, Image.FromFile(red_bull_path)),
+                new Item("Dr. Pepper", 1.99m, Image.FromFile(dr_pepper_path)),
+                new Item("Orange Fanta", 2.99m, Image.FromFile(orange_fanta_path)),
+                new Item("Peace Tea", 0.99m, Image.FromFile(peace_tea_path)),
+                new Item("Arizona Tea", 0.99m, Image.FromFile(arizona_tea_path)),
+                new Item("Mountain Dew", 2.99m, Image.FromFile(mtn_dew_path)),
+                new Item("MUG Root Beer", 2.99m, Image.FromFile(mug_root_beer_path)),
+                new Item("Brisk Iced Tea", 1.99m, Image.FromFile(brisk_tea_path))
             ];
 
             int buttonWidth = 71;
@@ -228,7 +233,7 @@ namespace LabelEx
                 Text = "Subtotal: $0.00"
             };
             Controls.Add(subtotalLabel);
-
+            
             taxLabel = new Label
             {
                 Location = new Point(350, 400),
@@ -250,7 +255,7 @@ namespace LabelEx
             Button checkoutButton = new Button
             {
                 Text = "Checkout",
-                Location = new Point(350, 460),
+                Location = new Point(350, 500),
                 Size = new Size(100, 30)
             };
             checkoutButton.Click += (_, _) => checkOut();
@@ -259,7 +264,7 @@ namespace LabelEx
             Button cancelButton = new Button
             {
                 Text = "Cancel",
-                Location = new Point(480, 460),
+                Location = new Point(480, 500),
                 Size = new Size(100, 30)
             };
             cancelButton.Click += (_, _) => cancelOrder();
